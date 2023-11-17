@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f0f5f9;
+            color: #333;
+            text-align: center;
+        }
+        #todo-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: navy;
+            text-align: center;
+        }
+        #todo-input {
+            width: calc(100% - 80px);
+            padding: 10px;
+            border: 1px solid navy;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        #todo-input::placeholder {
+            color: #999; /* Warna placeholder input */
+        }
+        button {
+            padding: 10px 15px;
+            background-color: navy; /* Warna tombol 'Add' */
+            color: #fff; /* Warna teks tombol */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #001f3f; /* Warna tombol saat dihover */
+        }
+        #todo-list {
+            list-style: none;
+            padding: 0;
+        }
+        #todo-list li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .delete-btn {
+            background-color: #9c3c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="todo-container">
+        <h1>To-Do List</h1>
+        <input type="text" id="todo-input" placeholder="Add a new task">
+        <button onclick="addTodo()">Add</button>
+        <ul id="todo-list"></ul>
+    </div>
+
+    <script>
+        function addTodo() {
+            const todoInput = document.getElementById('todo-input');
+            const newTodo = todoInput.value.trim();
+
+            if (newTodo !== '') {
+                fetch('/add_todo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 'todo': newTodo })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayTodos(data.todos);
+                        todoInput.value = '';
+                    } else {
+                        alert(data.message);
+                    }
+                });
+            } else {
+                alert('Please enter a task!');
+            }
+        }
+
+        function removeTodo(todolist) {
+            fetch(`/delete_todo/${todolist}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayTodos(data.todos);
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+
+        function displayTodos(todos) {
+            const todoList = document.getElementById('todo-list');
+            todoList.innerHTML = '';
+            todos.forEach((todo, todolist) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${todo}</span>
+                    <button class="delete-btn" onclick="removeTodo(${todolist})">Delete</button>
+                `;
+                todoList.appendChild(li);
+            });
+        }
+
+        // Tampilkan daftar to-do saat halaman dimuat
+        fetch('/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayTodos(data.todos);
+            }
+        });
+    </script>
+</body>
+</html>
