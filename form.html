@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            background-color: #001f3f;
+            padding: 10px;
+            text-align: center;
+            color: #fff;
+            margin-top: 0;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: calc(100% - 16px); /* Input akan mengisi lebar kontainer dengan margin yang disesuaikan */
+            box-sizing: border-box; /* Menyesuaikan padding ke dalam lebar */
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            padding: 8px 15px;
+            background-color: #001f3f;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #fff;
+            color: #001f3f;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>BMI Calculator</h1>
+    <form action="/calculate" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="weight">Weight (kg):</label>
+        <input type="number" id="weight" name="weight" step="0.01" required><br><br>
+
+        <label for="height">Height (m):</label>
+        <input type="number" id="height" name="height" step="0.01" required><br><br>
+
+        <input type="submit" value="Calculate BMI">
+    </form>
+</body>
+
+</html>
